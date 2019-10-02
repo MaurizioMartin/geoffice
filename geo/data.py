@@ -73,7 +73,10 @@ def loadDataAirports(lat,lon,center):
     db = conections("mmartin")
     geo = geopoint(lat,lon)
     df = geonearAir(db,geo,radio)
-    df = orderdf(df,center)
-    return df
+    if df.empty:
+        return df
+    else:
+        df = orderdf(df,center)
+        return df
 
 

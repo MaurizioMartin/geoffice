@@ -39,7 +39,7 @@ def results(request):
     companies_img = api.getMap(search,compan_order,center)
     rest_img = api.getMap(search,rests_order,center)
     starbucks_img = api.getMap(search,star_order,center)
-    airport_img = api.getMap(search,airport_order,center)
+    #airport_img = api.getMap(search,airport_order,center)
     schools = api.getSchools(search,lat,lon)
 
     return render(request, 'geo/results.html', {
@@ -47,7 +47,7 @@ def results(request):
             'center_img': center_img,
             'lat': lat,
             'lon': lon,
-            'airport_img': airport_img,
+            #'airport_img': airport_img,
             'rest_near': rest_near,
             'star_near': star_near,
             'addresscenter': addresscenter,
