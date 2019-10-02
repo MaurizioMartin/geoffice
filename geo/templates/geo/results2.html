@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results page</title>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/static/util.css">
+    <link rel="stylesheet" type="text/css" href="/static/main.css">  
+<!--===============================================================================================-->
+</head>
+
+<body>
+    <div class="section">
+        <h1><span data-shadow-text="The best place">The best place</span><br><br><br> for your company
+            <br><br><br> in {{search}} is: <br><br><br> {{addresscenter}}</h1>
+    </div>
+    <div class="container">
+        <div class="limiter"></div>
+            <div class="container-table100">
+                <div class="wrap-table100">
+                    <div class="table100">
+                        
+                        <div class="section">
+                            <h3>View Map</h3>
+                            <iframe
+                                width="1200"
+                                height="650"
+                                style="float:center"
+                                frameborder="0" style="border:0"
+                                src="{{center_img}}" allowfullscreen>
+                            </iframe>
+                            <br>
+                        </div>
+
+                        <div class="section">
+                            <h3>Succesful companies around</h3>
+                                %for table in tables:
+                                    {{!table}}
+                                %end
+                            <br>
+                            <img src="{{companies_img}}">
+                            <br><br>
+                        </div>
+
+                        <div class="section">
+                        <h3>Schools around</h3>
+                            <br>
+                            <iframe
+                                width="1200"
+                                height="500"
+                                frameborder="0" style="border:1"
+                                src="{{schools}}" allowfullscreen>
+                            </iframe>
+                            <br><br>
+                        </div>
+
+                        <div class="section">
+                            <h3>Vegan restaurants around (2km)</h3>
+                            <br>
+                            <img src="{{rest_img}}">
+                            <iframe
+                                width="550"
+                                height="450"
+                                frameborder="0" style="border:1"
+                                src="{{rest_near}}" allowfullscreen>
+                            </iframe>
+                            <br><br>
+                        </div>
+
+                        <div class="section">
+                            <h3>starbucks around (1km)</h3>
+                            <br>
+                            <img src="{{starbucks_img}}">
+                            <iframe
+                                width="550"
+                                height="450"
+                                frameborder="0" style="border:1"
+                                src="{{star_near}}" allowfullscreen>
+                            </iframe>
+                        </div>
+
+                        <div class="section airport">
+                            <h3>Airports around (20km)</h3>
+                                %for air in airports:
+                                    {{!air}}
+                                %end
+                            <br>
+                            <!---<img src="{{airport_img}}">--->
+                            <br><br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/jquery-3.3.1.min.js"></script>
+    <script src="static/scrollify.js"></script>
+    <script src="static/jquery.scrollify.js"></script>
+    
+</body>
+
+</html>
