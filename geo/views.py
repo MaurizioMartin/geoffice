@@ -29,7 +29,7 @@ def results(request):
     compan_order = data.orderdf(companies_df,center)
     rests_order = data.orderdf(rests,center)
     star_order = data.orderdf(starbucks,center)
-    airport_order = data.loadDataAirports(lat,lon,center)
+    #airport_order = data.loadDataAirports(lat,lon,center)
 
     rest_near = api.getDirCar(center,rests_order[["lat","lon"]].values[0])
     star_near = api.getDirWalk(center,star_order[["lat","lon"]].values[0])
@@ -58,5 +58,5 @@ def results(request):
             'schools': schools,
             'search': search,
             'tables': compan_order.to_html(classes='data',columns=("name","description","category_code","homepage_url","distance"), header="true"),
-            'airports': airport_order.to_html(classes='data',columns=("Airport","City","Country","distance"),header="True"),
+            #'airports': airport_order.to_html(classes='data',columns=("Airport","City","Country","distance"),header="True"),
         })

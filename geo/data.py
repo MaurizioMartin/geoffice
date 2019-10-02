@@ -67,7 +67,7 @@ def geonearAir(db, geopoint, maxdistance=1000):
     df = pd.DataFrame(data)
     return df
 
-
+'''
 def loadDataAirports(lat,lon,center):
     radio = 20000
     db = conections("mmartin")
@@ -78,5 +78,5 @@ def loadDataAirports(lat,lon,center):
     else:
         df = orderdf(df,center)
         return df
-
+'''
 
