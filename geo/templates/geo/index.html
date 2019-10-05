@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>Demo</title>
+	<style>
+		#loading {
+		background: url('littlepin_spinner.gif') no-repeat center center;
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 100%;
+		z-index: 9999999;
+	}
+	</style>
+</head>
+<body>
+	<div id="loading"></div>
+
+	<div><p>hola</p></div>
+</body>
+<script src="jquery-1.9.1.min.js"></script>
+<script>
+	function hideLoader() {
+		$('#loading').hide();
+	}
+	
+	//$(window).ready(hideLoader);
+	
+	// Strongly recommended: Hide loader after 20 seconds, even if the page hasn't finished loading
+	setTimeout(hideLoader, 3000);
+</script>
+</html>

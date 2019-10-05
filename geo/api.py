@@ -1,9 +1,3 @@
-def test(box):
-    return "this is working with {}".format(box)
-
-#https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,
-#+Mountain+View,+CA&key=YOUR_API_KEY
-
 import os
 import requests
 from dotenv import load_dotenv

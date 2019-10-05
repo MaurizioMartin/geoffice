@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import geo.api as api
 import geo.data as data
+import geo.typeform as tform
 
 
 def index(request):
@@ -9,14 +10,15 @@ def index(request):
     return render(request, 'geo/home.html')
 
 def results(request):
-    search = request.POST['searchbox']
-    test = api.test(search)
-
+    #search = request.POST['searchbox']
+    dictio = tform.getDataDict()
+    search = dictio['place']
+    role = dictio['role']
     geo = api.getGeoloc(search)
     lat = geo["lat"]
     lon = geo["lng"]
     radio = 2500
-    companies_df = data.getDf(lat,lon,radio)
+    companies_df = data.getDf(role,lat,lon,radio)
     zomatodict = api.getZomatoCityID(search)
     rests = api.getVeganRestaurants(zomatodict["id"])
     starbucks = api.getStarbucks(zomatodict["id"])
@@ -43,7 +45,7 @@ def results(request):
     schools = api.getSchools(search,lat,lon)
 
     return render(request, 'geo/results.html', {
-            'searchbox': test,
+            'searchbox': search,
             'center_img': center_img,
             'lat': lat,
             'lon': lon,
@@ -57,6 +59,6 @@ def results(request):
             'starbucks_img': starbucks_img,
             'schools': schools,
             'search': search,
-            'tables': compan_order.to_html(classes='data',columns=("name","description","category_code","homepage_url","distance"), header="true"),
+            'tables': compan_order.to_html(classes='data',columns=("name","description_x","category_code","homepage_url","distance"), header="true"),
             #'airports': airport_order.to_html(classes='data',columns=("Airport","City","Country","distance"),header="True"),
         })

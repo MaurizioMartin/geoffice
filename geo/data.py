@@ -4,6 +4,7 @@ import json
 from geopy.distance import geodesic
 from dotenv import load_dotenv
 import os
+import geo.clusters as clusters
 load_dotenv()
 
 MONGO_PWD = os.getenv("MONGO_PWD")
@@ -18,16 +19,17 @@ def loadData(db):
     df = pd.DataFrame(data)
     return df
 
-def geonear(db, geopoint, maxdistance=1000):
-    data = db.companies.find({
+def geonear(db, categories, geopoint, maxdistance=1000):
+    data = db.companiesOffices.find({
         "geo":{
             "$near":{
                 "$geometry":geopoint,
                 "$maxDistance":maxdistance
-            }}})
+            }},
+        "category_code": {"$in":categories
+                     }})
     df = pd.DataFrame(data)
     return df
-
 
 def geopoint(lat,lon):
     return {'type': 'Point', 'coordinates': [lon, lat]}
@@ -40,13 +42,14 @@ def getlon(geopoint):
     lon = geopoint["coordinates"][0]
     return lon
 
-def getDf(lat,lon,radio):
+def getDf(role,lat,lon,radio):
     db = conections("mmartin")
     geo = geopoint(lat,lon)
-    df = geonear(db,geo,radio)
+    categories = clusters.getCategories(role)
+    df = geonear(db,categories,geo,radio)
     df["lat"] = df["geo"].apply(getlat)
     df["lon"] = df["geo"].apply(getlon)
-    df = df[["name","description","category_code","homepage_url","lat","lon"]]
+    df = df[["name","description_x","category_code","homepage_url","lat","lon"]]
     return df
 
 def addDistance(latitude,longitude,center):
