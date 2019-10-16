@@ -21,12 +21,14 @@ def getDataDict():
     dictio = {}
     for ans in data["items"][0]["answers"]:
         idd = ans["field"]['id']
-        if idd == "pYdlUL4BDYXz":
-            dictio['role'] = ans["choice"]['label']
-        elif idd == "lCsYeYRuKTU7":
-            dictio['numWork'] = ans["choice"]['label']
-        elif idd == "PXoY6034ffcD":
-            dictio['near'] = ans["choices"]['labels']
+        if idd == "acyK4BvwUV2F":
+            dictio['role'] = ans["text"]
+        elif idd == "fckMTY5YY9gQ":
+            dictio['located'] = ans['text']
+        elif idd == "BVZaZarHKb8M":
+            dictio['numWork'] = ans["text"]
+        elif idd == "uZmq4BR1Oj19":
+            dictio['near'] = ans["text"]
         elif idd == "QE6lOXhM0PAk":
             dictio['place'] = ans["text"]
 

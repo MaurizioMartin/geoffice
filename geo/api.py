@@ -7,12 +7,12 @@ import pandas as pd
 import urllib.request
 from uber_rides.session import Session
 from uber_rides.client import UberRidesClient
+import random
 load_dotenv()
 
 GOOGLE_CRED = os.getenv("GOOGLE_CRED")
 ZOMATO_CRED = os.getenv("ZOMATO_CRED")
-UBER_CRED = os.getenv("UBER_CRED")
-UBER_ACCESS_TOKEN = os.getenv("UBER_ACCESS_TOKEN")
+
 
 def getGeoloc(params):
     params = "address="+params
@@ -21,6 +21,32 @@ def getGeoloc(params):
     data = response.json()
     for dat in data["results"]:
         return dat["geometry"]["location"]
+
+
+def getZomatoGeocode(center):
+    lat = center[0]
+    lon = center[1]
+    headers = {    
+       "user-key": "{}".format(ZOMATO_CRED)
+    }
+    url = "https://developers.zomato.com/api/v2.1/geocode?lat={}&lon={}".format(lat,lon)
+    response = requests.get(url,headers=headers)
+    data=response.json()
+    zomato_dict = {
+        'location_title': data['location']['title'],
+        'popularity': data['popularity']['popularity'],
+        'nightlife': data['popularity']['nightlife_index'],
+        'restaurants': []
+    }
+    for rest in data['nearby_restaurants']:
+        name = rest['restaurant']['name']
+        location = rest['restaurant']['location']['address']
+        cuisines = rest['restaurant']['cuisines']
+        rate = rest['restaurant']['user_rating']['aggregate_rating']
+        photo = rest['restaurant']['featured_image']
+        zomato_dict['restaurants'].append([name,location,cuisines,rate,photo])
+    return zomato_dict
+
 
 def getZomatoCityID(params):
     headers = {    
@@ -95,6 +121,11 @@ def getCenter(df1):
         medlon+=float(col[1])
     return [medlat/suma,medlon/suma]
 
+def updateCenter(coord1,coord2):
+    lat = (coord1[0]*0.5)+(coord2[0]*0.5)
+    lon = (coord1[1]*0.5)+(coord2[1]*0.5)
+    return [lat,lon]
+
 def getCenterPonderate(com,res,star):
     lat = (com[0]*0.3)+(res[0]*0.2)+(star[0]*0.5)
     lon = (com[1]*0.3)+(res[1]*0.2)+(star[1]*0.5)
@@ -119,7 +150,18 @@ def getMap(search,df,center):
     marcadores= "".join(marcadores)
     #print(marcadores)
     #img = "https://maps.googleapis.com/maps/api/staticmap?center="+search+"&zoom=13&size=600x300&maptype=roadmap&markers=color:blue%7Clabel:S%7C"+str(lat)+","+str(lon)+"&key="+GOOGLE_CRED
-    img = "https://maps.googleapis.com/maps/api/staticmap?center="+search+"&zoom=13&size=600x450&maptype=roadmap"+marcadores+"&key="+GOOGLE_CRED
+    img = "https://maps.googleapis.com/maps/api/staticmap?center="+search+"&zoom=14&size=600x450&maptype=roadmap"+marcadores+"&key="+GOOGLE_CRED
+    return img
+
+def getNearMap(search,near,lista,center):
+    marcadores=[]
+    colors = ['blue','yellow','green','orange','brown']
+    selectedcol = random.sample(colors, len(lista))
+    for index,e in enumerate(lista):
+        marcadores.append("&markers=color:"+selectedcol[index]+"%7Clabel:"+str(index)+"%7C"+str(near[e][0])+","+str(near[e][1]))
+    marcadores.append("&markers=color:red%7Clabel:C%7C"+str(center[0])+","+str(center[1]))
+    marcadores= "".join(marcadores)
+    img = "https://maps.googleapis.com/maps/api/staticmap?center="+search+"&zoom=13&size=600x550&maptype=roadmap"+marcadores+"&key="+GOOGLE_CRED
     return img
 
 def getSchools(search,lat,lon):
@@ -152,18 +194,10 @@ def autocomplete():
     data=response.json()
     return data
 
-def uberSession():
-    session = Session(server_token=UBER_CRED)
-    client = UberRidesClient(session)
-    print(client)
-    return client
-
-def getPrices():
-    headers = {    
-       "Authorization": "Bearer {}".format(UBER_ACCESS_TOKEN)
-    }
-    url = 'https://api.uber.com/v1.2/estimates/price?start_latitude=37.7752315&start_longitude=-122.418075&end_latitude=37.7752415&end_longitude=-122.518075'
-    response = requests.get(url,headers=headers)
-    print(response.status_code)
+def nearby(text,coord):
+    url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input="+text+"&inputtype=textquery&fields=photos,formatted_address,name,opening_hours,geometry&locationbias=circle:2000@"+str(coord[0])+","+str(coord[1])+"&key={}".format(GOOGLE_CRED)
+    response = requests.get(url)
     data=response.json()
-    return data
+    name = data['candidates'][0]['name']
+    location = data['candidates'][0]['geometry']['location']
+    return [location['lat'], location['lng'],name]
