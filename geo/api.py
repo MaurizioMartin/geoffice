@@ -200,4 +200,6 @@ def nearby(text,coord):
     data=response.json()
     name = data['candidates'][0]['name']
     location = data['candidates'][0]['geometry']['location']
-    return [location['lat'], location['lng'],name]
+    locoord = [location['lat'],location['lng']]
+    route = getDirCar(coord,locoord)
+    return [location['lat'], location['lng'],name,route]

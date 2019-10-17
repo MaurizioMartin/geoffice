@@ -59,11 +59,22 @@
                                     {% for k, v in near.items %}
                                     <tr>
                                         <td>{{ forloop.counter0 }}</td>
-                                        <td>{{ k }}</td>
+                                        <td data-route="{{ v.3 }}" class="select_near">{{ k }}</td>
                                         <td>{{ v.2 }}</td>
                                     </tr>
                                     {% endfor %}
                                 </table>
+                            </div>
+                            <div style=" 
+                            margin-left: 40px; margin-top: 40px;">
+                                <iframe
+                                    id="route"
+                                    width="400"
+                                    height="400"
+                                    frameborder="0" style="border:1"
+                                    
+                                    src="" allowfullscreen>
+                                </iframe>
                             </div>
                         </div>
                         
