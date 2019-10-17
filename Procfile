@@ -1,1 +1,1 @@
-web: gunicorn geoffice.wsgi --log-file -
+web: gunicorn geosearch.wsgi --log-file -
