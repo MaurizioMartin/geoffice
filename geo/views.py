@@ -30,7 +30,8 @@ def results(request):
         for e in dictio['near']:
             near[e] = api.nearby(e,center)
             center = api.updateCenter(near[e],center_companies)
-
+        for e in dictio['near']:
+            near[e].append(api.getDirCar(center,near[e]))
 
         '''
         zomatodict = api.getZomatoCityID(search)

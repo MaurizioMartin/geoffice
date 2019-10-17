@@ -183,7 +183,8 @@ def getDirWalk(center,coord):
 def getDirCar(center,coord):
     orig=getAddress(center)
     orig=orig.replace(" ","+")
-    dest=getAddress(coord)
+    locoord = [coord[0],coord[1]]
+    dest=getAddress(locoord)
     dest=dest.replace(" ","+")
     src="https://www.google.com/maps/embed/v1/directions?key="+GOOGLE_CRED+"&origin="+orig+"&destination="+dest+"&mode=driving"
     return src
@@ -200,6 +201,4 @@ def nearby(text,coord):
     data=response.json()
     name = data['candidates'][0]['name']
     location = data['candidates'][0]['geometry']['location']
-    locoord = [location['lat'],location['lng']]
-    route = getDirCar(coord,locoord)
-    return [location['lat'], location['lng'],name,route]
+    return [location['lat'], location['lng'],name]

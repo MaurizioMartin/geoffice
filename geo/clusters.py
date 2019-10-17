@@ -105,6 +105,7 @@ def checkKeyWords(keywords,data):
 def getNouns(text):
     is_noun = lambda pos: pos[:2] == 'NN'
     tokenized = nltk.word_tokenize(text)
+    print(nltk.pos_tag(tokenized))
     nouns = [word for (word, pos) in nltk.pos_tag(tokenized) if is_noun(pos)] 
     return nouns
 
