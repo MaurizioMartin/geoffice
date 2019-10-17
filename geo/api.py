@@ -5,8 +5,6 @@ from urllib.parse import urlencode
 from bs4 import BeautifulSoup
 import pandas as pd
 import urllib.request
-from uber_rides.session import Session
-from uber_rides.client import UberRidesClient
 import random
 load_dotenv()
 
