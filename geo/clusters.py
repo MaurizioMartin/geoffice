@@ -131,8 +131,8 @@ def cleandictionary(dictio):
     places = GeoText(dictio['located'])
     cleandictio['located'] = places.cities[0]
     # size
-    size = getSize(dictio['numWork'])
-    cleandictio['size'] = size
+    #size = getSize(dictio['numWork'])
+    #cleandictio['size'] = size
 
     print(cleandictio)
     return cleandictio
