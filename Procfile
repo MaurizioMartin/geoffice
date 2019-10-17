@@ -1,0 +1,1 @@
+web: gunicorn geoffice.wsgi --log-file -
