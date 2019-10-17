@@ -64,14 +64,11 @@
                                     </tr>
                                     {% endfor %}
                                 </table>
-                            </div>
-                            <div style=" 
-                            margin-left: 40px; margin-top: 40px;">
                                 <iframe
                                     id="route"
                                     width="400"
                                     height="400"
-                                    frameborder="0" style="border:1"
+                                    frameborder="0" style="border:1; margin-left: 40px; margin-top: 10px;"
                                     
                                     src="" allowfullscreen>
                                 </iframe>
@@ -140,27 +137,31 @@
                         </iframe>
                         <br><br>
                     </div>
-                    <!---
-                            <div class="section">
-                                <h3>starbucks around (1km)</h3>
-                                <br>
-                                <img src="{{starbucks_img}}">
-                                <iframe
-                                    width="550"
-                                    height="450"
-                                    frameborder="0" style="border:1"
-                                    src="{{star_near}}" allowfullscreen>
-                                </iframe>
-                            </div>
-                            
-                            <div class="section airport">
-                                <h3>Airports around (20km)</h3>
-                                    {{airports|safe}}
-                                <br>
-                                <img src="{{airport_img}}">
-                                <br><br>
-                            </div>
---->
+                    <div class="section">
+                        <h3>starbucks around (1km)</h3>
+                        <br>
+                        <img src="{{starbucks_img}}">
+                        <iframe
+                            width="550"
+                            height="450"
+                            frameborder="0" style="border:1"
+                            src="{{star_near}}" allowfullscreen>
+                        </iframe>
+                    </div>
+                    
+                    <div class="section airport">
+                        <h3>Airports around (20km)</h3>
+                            {{airports|safe}}
+                        <br>
+                        <iframe
+                            id="route"
+                            width="100%"
+                            height="500"
+                            frameborder="0" style="border:1; margin: 0 auto; display: block;"
+                            src="{{airport_img}}" allowfullscreen>
+                        </iframe>
+                        <br><br>
+                    </div>
                 </div>
             </div>
         </div>

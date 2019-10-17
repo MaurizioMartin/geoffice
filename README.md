@@ -8,15 +8,16 @@ It was made for the final project of the Ironhack's Data Analytics bootcamp.
 
 It all started with a Crunchbase dataset with almost 19K companies. I created a model grouping all the companies by category_codes and creating 4 clusters. When a new company is introduced, the system can classify it and return companies with a similar category.
 
-The process of search is simple for user. They just need to fill a small survey with three questions: "","" and "". Once submitted, the system will make NLP and will return keywords.
+The process of search is simple for user. They just need to fill a small survey with three questions: "Tell us about the role of the company!","Do you have any preference on where do you want to be located?" and "Do you want to be near something in special?".
+Once submitted, the system will make NLP and will return keywords.
 
 ## Role
 
-A model was created by analysing the descriptions of all the companies and making IF-IDF. When, for example, an answer like "" is submitted, the system will return "" and "". Then, those keywords will be compared between all the category codes with the Jaro distance. This will return a percentage where the max value will be considered as the ROLE.
+A model was created by analysing the descriptions of all the companies and making TF-IDF. When, for example, an answer like "We are a new gaming company!" is submitted, the system will return "gaming" and "company". Then, those keywords will be compared between all the category codes with the Jaro distance. This will return a percentage where the max value will be considered as the ROLE.
 
 ## Location
 
-With a python library called "". The location will be extracted from the text.
+With a python library called "GeoText". The location will be extracted from the text.
 
 ## Near
 

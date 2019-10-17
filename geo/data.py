@@ -50,14 +50,15 @@ def getDf(role,lat,lon,radio):
     df["lat"] = df["geo"].apply(getlat)
     df["lon"] = df["geo"].apply(getlon)
     df = df[["name","description_x","category_code","homepage_url","lat","lon"]]
+    df.columns = ['Name', 'Description', 'Category', 'Web', 'lat','lon']
     return df
 
 def addDistance(latitude,longitude,center):
     return geodesic(tuple(center), (latitude,longitude)).miles
 
 def orderdf(df,center):
-    df["distance"] = df.apply(lambda x: addDistance(x["lat"], x["lon"],center), axis = 1)
-    df = df.sort_values(by=['distance'])
+    df["Distance"] = df.apply(lambda x: addDistance(x["lat"], x["lon"],center), axis = 1)
+    df = df.sort_values(by=['Distance'])
     return df.head(10)
 
 def geonearAir(db, geopoint, maxdistance=1000):
@@ -70,7 +71,7 @@ def geonearAir(db, geopoint, maxdistance=1000):
     df = pd.DataFrame(data)
     return df
 
-'''
+
 def loadDataAirports(lat,lon,center):
     radio = 20000
     db = conections("mmartin")
@@ -81,5 +82,5 @@ def loadDataAirports(lat,lon,center):
     else:
         df = orderdf(df,center)
         return df
-'''
+
 

@@ -187,6 +187,14 @@ def getDirCar(center,coord):
     src="https://www.google.com/maps/embed/v1/directions?key="+GOOGLE_CRED+"&origin="+orig+"&destination="+dest+"&mode=driving"
     return src
 
+def getDirAir(center,coord):
+    orig=getAddress(center)
+    orig=orig.replace(" ","+")
+    dest=getAddress(coord)
+    dest=dest.replace(" ","+")
+    src="https://www.google.com/maps/embed/v1/directions?key="+GOOGLE_CRED+"&origin="+orig+"&destination="+dest+"&mode=driving"
+    return src
+
 def autocomplete():
     url = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=Vict&types=geocode&key={}".format(GOOGLE_CRED)
     response = requests.get(url)
