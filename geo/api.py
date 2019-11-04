@@ -6,10 +6,13 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import urllib.request
 import random
+import json
+import numpy as np
 load_dotenv()
 
 GOOGLE_CRED = os.getenv("GOOGLE_CRED")
 ZOMATO_CRED = os.getenv("ZOMATO_CRED")
+CENSUS_CRED = os.getenv("CENSUS_CRED")
 
 
 def getGeoloc(params):
@@ -137,7 +140,7 @@ def getAddress(center):
     return data
 
 
-def getMap(search,df,center):
+def getMap(df,center):
     marcadores=[]
     label = 0
 
@@ -148,10 +151,10 @@ def getMap(search,df,center):
     marcadores= "".join(marcadores)
     #print(marcadores)
     #img = "https://maps.googleapis.com/maps/api/staticmap?center="+search+"&zoom=13&size=600x300&maptype=roadmap&markers=color:blue%7Clabel:S%7C"+str(lat)+","+str(lon)+"&key="+GOOGLE_CRED
-    img = "https://maps.googleapis.com/maps/api/staticmap?center="+search+"&zoom=14&size=600x450&maptype=roadmap"+marcadores+"&key="+GOOGLE_CRED
+    img = "https://maps.googleapis.com/maps/api/staticmap?center="+str(center[0])+","+str(center[1])+"&zoom=14&size=600x450&maptype=roadmap"+marcadores+"&key="+GOOGLE_CRED
     return img
 
-def getNearMap(search,near,lista,center):
+def getNearMap(near,lista,center):
     marcadores=[]
     colors = ['blue','yellow','green','orange','brown']
     selectedcol = random.sample(colors, len(lista))
@@ -159,7 +162,7 @@ def getNearMap(search,near,lista,center):
         marcadores.append("&markers=color:"+selectedcol[index]+"%7Clabel:"+str(index)+"%7C"+str(near[e][0])+","+str(near[e][1]))
     marcadores.append("&markers=color:red%7Clabel:C%7C"+str(center[0])+","+str(center[1]))
     marcadores= "".join(marcadores)
-    img = "https://maps.googleapis.com/maps/api/staticmap?center="+search+"&zoom=13&size=600x550&maptype=roadmap"+marcadores+"&key="+GOOGLE_CRED
+    img = "https://maps.googleapis.com/maps/api/staticmap?center="+str(center[0])+","+str(center[1])+"&zoom=13&size=600x550&maptype=roadmap"+marcadores+"&key="+GOOGLE_CRED
     return img
 
 def getSchools(search,lat,lon):
@@ -201,10 +204,70 @@ def autocomplete():
     data=response.json()
     return data
 
-def nearby(text,coord):
+def findReq(text,coord):
     url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input="+text+"&inputtype=textquery&fields=photos,formatted_address,name,opening_hours,geometry&locationbias=circle:2000@"+str(coord[0])+","+str(coord[1])+"&key={}".format(GOOGLE_CRED)
     response = requests.get(url)
     data=response.json()
     name = data['candidates'][0]['name']
     location = data['candidates'][0]['geometry']['location']
     return [location['lat'], location['lng'],name]
+
+def nearby(text,coord):
+    url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={},{}&rankby=distance&keyword={}&key={}".format(str(coord[0]),str(coord[1]),text,GOOGLE_CRED)
+    response = requests.get(url)
+    data=response.json()
+    lista = []
+    for dat in data['results']:
+        dictio = {
+            'location': dat['geometry']['location'],
+            'name': dat['name'],
+            'rating': dat['rating']
+        }
+        lista.append(dictio)
+    return lista
+
+def distance(lat1, lon1, lat2, lon2):
+    p = 0.017453292519943295 # pi/180
+    dist = 0.5 - np.cos((lat2-lat1)*p)/2 + np.cos(lat1*p)*np.cos(lat2*p) * (1-np.cos((lon2-lon1)*p)) / 2
+    return 12742 * np.arcsin(np.sqrt(dist)) # 2 * R; R = 6371 km
+
+
+def closest(lista,coord):
+    for e in lista:
+        e['distance'] = distance(coord[0],coord[1],e['location']['lat'],e['location']['lng'])
+    a = sorted(lista, key=lambda x: (-x['rating'], x['distance']))
+    return [a[0]['location']['lat'], a[0]['location']['lng'],a[0]['name'],a[0]['rating']]
+
+def getCounty(address):
+    address = address.split(',')
+    street = address[0].strip()
+    city = address[1].strip()
+    state = address[2].strip().split(' ')[0]
+    url = "http://geocoding.geo.census.gov/geocoder/geographies/address?street={}&city={}&state={}&benchmark=Public_AR_Census2010&vintage=Census2010_Census2010&layers=14&format=json".format(street,city,state)
+    response = requests.get(url)
+    data=response.json()
+    data = data['result']['addressMatches'][0]['geographies']['Census Blocks'][0]
+    dictio = {
+        'tract': data['TRACT'],
+        'state': data['STATE'],
+        'county': data['COUNTY'],
+        'group': data['BLKGRP']
+    }
+    return dictio
+
+
+def getInfo(dictio):
+    url = 'https://api.census.gov/data/2019/pdb/blockgroup?get=State_name,Med_HHD_Inc_BG_ACS_13_17,Median_Age_ACS_13_17,Med_HHD_Inc_TR_ACS_13_17,Med_House_Value_TR_ACS_13_17,Tot_Population_ACS_13_17,County_name&for=block%20group:{}&in=state:{}&in=county:{}%20tract:{}&key={}'.format(dictio['group'],dictio['state'],dictio['county'],dictio['tract'],CENSUS_CRED)
+    response = requests.get(url)
+    data=response.json()
+    dictio = {
+        'State_name': data[1][0],
+        'Med_HHD_Inc_BG': data[1][1],
+        'Median_Age': data[1][2],
+        'Med_HHD_Inc_TR': data[1][3],
+        'Med_House_Value': data[1][4],
+        'Tot_Population': data[1][5],
+        'County_name': data[1][6]
+    }
+
+    return dictio

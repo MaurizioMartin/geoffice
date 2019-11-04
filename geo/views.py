@@ -28,7 +28,7 @@ def results(request):
         center = center_companies
         near = {}
         for e in dictio['near']:
-            near[e] = api.nearby(e,center)
+            near[e] = api.closest(api.nearby(e,center),center)
             center = api.updateCenter(near[e],center_companies)
         for e in dictio['near']:
             near[e].append(api.getDirCar(center,near[e]))
@@ -53,21 +53,30 @@ def results(request):
         star_near = api.getDirWalk(center,star_order[["lat","lon"]].values[0])
         airport_img = api.getDirAir(center,airport_order[["lat","lon"]].values[0])
         addresscenter = api.getAddress(center)
+        infodictio = api.getInfo(api.getCounty(addresscenter))
+        data_median_age = infodictio['Median_Age']
+        data_med_household = infodictio['Med_HHD_Inc_TR']
+        data_med_housevalue = infodictio['Med_House_Value']
+        data_population = infodictio['Tot_Population']
 
         center_img = api.getCenterMap(center)
-        companies_img = api.getMap(search,compan_order,center)
-        near_img = api.getNearMap(search,near,dictio['near'],center)
+        companies_img = api.getMap(compan_order,center)
+        near_img = api.getNearMap(near,dictio['near'],center)
         zomatodict = api.getZomatoGeocode(center)
         location_title = zomatodict['location_title']
         popularity = zomatodict['popularity']
         nightlife = zomatodict['nightlife']
         restaurantlist = zomatodict['restaurants']
         #rest_img = api.getMap(search,rests_order,center)
-        starbucks_img = api.getMap(search,star_order,center)
+        starbucks_img = api.getMap(star_order,center)
         #airport_img = api.getMap(search,airport_order,center)
         schools = api.getSchools(search,lat,lon)
 
         return render(request, 'geo/results.html', {
+                'data_median_age': data_median_age,
+                'data_med_household': data_med_household,
+                'data_med_housevalue': data_med_housevalue,
+                'data_population': data_population,
                 'searchbox': search,
                 'center_img': center_img,
                 'lat': lat,

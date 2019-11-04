@@ -11,6 +11,8 @@
     <!--===============================================================================================-->
     <link rel="stylesheet" type="text/css" href="{% static 'geo/util.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'geo/main.css' %}">
+    <link rel="stylesheet" type='text/css' href="https://use.fontawesome.com/releases/v5.0.4/css/all.css">
+    <link rel="shortcut icon" href="{%  static 'favicon.ico' %}">
     <!--===============================================================================================-->
 </head>
 
@@ -34,7 +36,7 @@
                     </div>
 
                     <div class="section">
-                        <h3>Succesful companies around</h3>
+                        <h3>Successful companies around</h3>
                         {{tables|safe}}
                         <br>
                         <img src="{{companies_img}}" style="margin: 0 auto; display: block;">
@@ -59,7 +61,7 @@
                                     {% for k, v in near.items %}
                                     <tr>
                                         <td>{{ forloop.counter0 }}</td>
-                                        <td data-route="{{ v.3 }}" class="select_near">{{ k }}</td>
+                                        <td data-route="{{ v.4 }}" class="select_near">{{ k }}</td>
                                         <td>{{ v.2 }}</td>
                                     </tr>
                                     {% endfor %}
@@ -78,9 +80,38 @@
                     </div>
                     <div class="section"></div>
 
-                    <div class="section">
+                    <div class="section" id="content">
                         <h2><span data-shadow-text="Useful information">Useful information</span></h2>
                     </div>
+
+
+                    <div id="projectFacts" class="sectionClass">
+                        <div class="fullWidth eight columns">
+                            <div class="projectFactsWrap ">
+                                <div class="item wow fadeInUpBig animated animated" data-number="{{data_median_age}}" style="visibility: visible;">
+                                    <i class="fas fa-male"></i>
+                                    <p id="number1" class="number">{{data_median_age}}</p>
+                                    <p>Median Age</p>
+                                </div>
+                                <div class="item wow fadeInUpBig animated animated" data-number="{{data_med_household}}" style="visibility: visible;">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    <p id="number2" class="number">{{data_med_household}}</p>
+                                    <p>Med. Household Income TR</p>
+                                </div>
+                                <div class="item wow fadeInUpBig animated animated" data-number="{{data_med_housevalue}}" style="visibility: visible;">
+                                    <i class="fas fa-home"></i>
+                                    <p id="number3" class="number">{{data_med_housevalue}}</p>
+                                    <p>Med. House Value TR</p>
+                                </div>
+                                <div class="item wow fadeInUpBig animated animated" data-number="{{data_population}}" style="visibility: visible;">
+                                    <i class="fas fa-users"></i>
+                                    <p id="number4" class="number">{{data_population}}</p>
+                                    <p>Population</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 
                     <div class="section">
                         <h3>Nightlife Index and nearby restaurants</h3>
@@ -129,6 +160,17 @@
 
                     </div>
 
+                    <div class="data_median_age" data_median_age={{data_median_age}} >
+                        <section>
+                            <figure>
+                                <canvas id="q1"></canvas>
+                            </figure>
+                        </section>
+                    </div>
+
+
+                    
+
                     <div class="section">
                         <h3>Schools around</h3>
                         <br>
@@ -169,8 +211,11 @@
     </div>
 
     <script src="{% static 'geo/jquery-3.3.1.min.js' %}"></script>
-
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
     <script src="{% static 'geo/views.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+    <script src="{% static 'geo/scripts.js' %}"></script>
+    
 </body>
 
 </html>
